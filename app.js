@@ -61,6 +61,23 @@ class PayrollCalculator {
     }
 
     async checkAuthenticationStatus() {
+        // Check URL parameters for authentication status or errors
+        const urlParams = new URLSearchParams(window.location.search);
+        const authError = urlParams.get('error');
+        const authenticated = urlParams.get('authenticated');
+        
+        if (authError) {
+            this.showError(`Authentication error: ${decodeURIComponent(authError)}`);
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
+        if (authenticated === 'true') {
+            this.showError('Authentication successful! You can now use the payroll calculator.');
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
         try {
             const response = await fetch('/api/auth/status');
             const data = await response.json();
@@ -68,6 +85,7 @@ class PayrollCalculator {
             if (data.authenticated) {
                 this.isAuthenticated = true;
                 this.updateSyncStatus('Ready', 'connected');
+                this.removeAuthenticationPrompt();
             } else {
                 this.isAuthenticated = false;
                 this.updateSyncStatus('Not authenticated', 'error');
@@ -95,6 +113,9 @@ class PayrollCalculator {
     }
 
     showAuthenticationPrompt() {
+        // Remove existing auth button if any
+        this.removeAuthenticationPrompt();
+        
         // Show a message to authenticate first
         const authButton = document.createElement('button');
         authButton.innerHTML = 'Authenticate with Google to continue';
@@ -109,6 +130,19 @@ class PayrollCalculator {
         // Disable the form
         const inputs = form.querySelectorAll('input, button');
         inputs.forEach(input => input.disabled = true);
+    }
+
+    removeAuthenticationPrompt() {
+        // Remove auth button
+        const authButton = document.querySelector('.auth-button');
+        if (authButton) {
+            authButton.remove();
+        }
+        
+        // Enable the form
+        const form = document.getElementById('employeeForm');
+        const inputs = form.querySelectorAll('input, button');
+        inputs.forEach(input => input.disabled = false);
     }
 
     async handleEmployeeFormSubmit(e) {

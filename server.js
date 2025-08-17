@@ -107,23 +107,48 @@ app.get('/api/auth/url', (req, res) => {
 
 // OAuth callback
 app.get('/auth/callback', async (req, res) => {
-    const { code } = req.query;
+    const { code, error: authError } = req.query;
+
+    console.log('OAuth callback received:', { code: code ? 'present' : 'missing', authError });
+
+    if (authError) {
+        console.error('OAuth authorization error:', authError);
+        return res.redirect('/?error=access_denied');
+    }
+
+    if (!code) {
+        console.error('No authorization code received');
+        return res.redirect('/?error=no_code');
+    }
 
     try {
+        console.log('Exchanging code for tokens...');
         const { tokens } = await oauth2Client.getAccessToken(code);
+        
+        console.log('Tokens received, setting credentials...');
         oauth2Client.setCredentials(tokens);
         
         // Initialize Google Sheets API
+        console.log('Initializing Google Sheets API...');
         sheets = google.sheets({ version: 'v4', auth: oauth2Client });
         isAuthenticated = true;
 
         // Initialize the spreadsheet if needed
+        console.log('Initializing spreadsheet...');
         await initializeSpreadsheet();
 
-        res.redirect('/#step1');
+        console.log('Authentication successful, redirecting...');
+        res.redirect('/?authenticated=true');
     } catch (error) {
-        console.error('Authentication error:', error);
-        res.status(500).send('Authentication failed');
+        console.error('Authentication error details:', {
+            message: error.message,
+            code: error.code,
+            status: error.status,
+            stack: error.stack
+        });
+        
+        const errorMessage = encodeURIComponent(`Authentication failed: ${error.message}`);
+        res.redirect(`/?error=${errorMessage}`);
     }
 });
 
