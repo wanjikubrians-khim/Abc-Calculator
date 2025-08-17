@@ -21,7 +21,18 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname)));
+
+// Serve static files with proper MIME types
+app.use(express.static(path.join(__dirname), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        }
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
 
 // Google Sheets Configuration
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
@@ -57,6 +68,20 @@ io.on('connection', (socket) => {
 // Serve the main page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Explicitly serve CSS files
+app.get('/*.css', (req, res) => {
+    const cssFile = path.join(__dirname, req.path);
+    res.setHeader('Content-Type', 'text/css');
+    res.sendFile(cssFile);
+});
+
+// Explicitly serve JS files
+app.get('/*.js', (req, res) => {
+    const jsFile = path.join(__dirname, req.path);
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(jsFile);
 });
 
 // Authentication status
