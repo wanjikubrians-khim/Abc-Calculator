@@ -1,13 +1,13 @@
 # Payroll Calculator - Technical Requirements Demonstration
 
 **Created by: Brian Wanjiku**  
-**Assignment: ABC Company Payroll Calculator**
+**Assignment: carebearbooks Payroll Calculator**
 
 This document demonstrates how my implementation meets all the technical requirements specified in the assignment.
 
 ## ✅ APPLICATION STRUCTURE
 
-### Header: "ABC Company" ✓
+### Header: "carebearbooks" ✓
 - **Location**: `index.html` line 11-14
 - **Implementation**: Clear header with company name and subtitle
 

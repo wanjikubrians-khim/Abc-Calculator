@@ -1,4 +1,4 @@
-# ABC Company Payroll Calculator
+# carebearbooks Payroll Calculator
 
 **Created by: Brian Wanjiku**  
 **Assignment: Technical Task - Google Sheets Integration**
