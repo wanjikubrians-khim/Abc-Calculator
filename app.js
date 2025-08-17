@@ -65,11 +65,13 @@ class PayrollCalculator {
             const response = await fetch('/api/auth/status');
             const data = await response.json();
             
-            if (!data.authenticated) {
-                await this.authenticateWithGoogle();
-            } else {
+            if (data.authenticated) {
                 this.isAuthenticated = true;
                 this.updateSyncStatus('Ready', 'connected');
+            } else {
+                this.isAuthenticated = false;
+                this.updateSyncStatus('Not authenticated', 'error');
+                this.showAuthenticationPrompt();
             }
         } catch (error) {
             console.error('Auth check failed:', error);
@@ -92,8 +94,32 @@ class PayrollCalculator {
         }
     }
 
+    showAuthenticationPrompt() {
+        // Show a message to authenticate first
+        const authButton = document.createElement('button');
+        authButton.innerHTML = 'Authenticate with Google to continue';
+        authButton.className = 'btn btn-primary auth-button';
+        authButton.style.marginBottom = '20px';
+        authButton.onclick = () => this.authenticateWithGoogle();
+        
+        const step1 = document.getElementById('step1');
+        const form = document.getElementById('employeeForm');
+        step1.insertBefore(authButton, form);
+        
+        // Disable the form
+        const inputs = form.querySelectorAll('input, button');
+        inputs.forEach(input => input.disabled = true);
+    }
+
     async handleEmployeeFormSubmit(e) {
         e.preventDefault();
+        
+        // Check authentication first
+        if (!this.isAuthenticated) {
+            this.showError('Please authenticate with Google first');
+            await this.authenticateWithGoogle();
+            return;
+        }
         
         const formData = new FormData(e.target);
         const employeeData = Object.fromEntries(formData.entries());
@@ -119,6 +145,12 @@ class PayrollCalculator {
             });
 
             if (!response.ok) {
+                if (response.status === 401) {
+                    // Authentication expired, redirect to auth
+                    this.isAuthenticated = false;
+                    await this.authenticateWithGoogle();
+                    return;
+                }
                 throw new Error('Failed to save employee data');
             }
 
