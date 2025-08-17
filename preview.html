@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC Company - Payroll Calculator (Preview)</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            display: flex;
+            background: #f8f9fa;
+            padding: 20px 0;
+            justify-content: space-around;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: #007bff;
+            color: white;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px;
+        }
+
+        .preview-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .preview-notice h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .preview-notice p {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .setup-steps {
+            background: #e7f3ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .setup-steps h3 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        .setup-steps ol {
+            margin-left: 20px;
+        }
+
+        .setup-steps li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .feature h4 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .feature ul {
+            margin-left: 20px;
+        }
+
+        .feature li {
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .demo-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .demo-section h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .calculation-demo {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ABC Company</h1>
+            <p>Payroll Calculator System</p>
+        </header>
+
+        <!-- Progress Indicator -->
+        <div class="progress-bar">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Employee Information</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">Wage Calculator</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-title">Cost Breakdown</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="preview-notice">
+                <h3>📋 Interface Preview</h3>
+                <p>This is a preview of the Payroll Calculator interface. To run the full application with Google Sheets integration, you need to install Node.js first.</p>
+                <a href="https://nodejs.org/" class="btn" target="_blank">Download Node.js</a>
+            </div>
+
+            <div class="setup-steps">
+                <h3>🚀 Setup Instructions</h3>
+                <ol>
+                    <li><strong>Install Node.js</strong> from <a href="https://nodejs.org/" target="_blank">nodejs.org</a></li>
+                    <li><strong>Restart your terminal/PowerShell</strong> after installation</li>
+                    <li><strong>Run:</strong> <code>npm install</code> in this project folder</li>
+                    <li><strong>Configure Google API</strong> credentials in <code>.env</code> file</li>
+                    <li><strong>Start application:</strong> <code>npm start</code></li>
+                    <li><strong>Open:</strong> <a href="http://localhost:3000">http://localhost:3000</a></li>
+                </ol>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <h4>🎯 Key Features</h4>
+                    <ul>
+                        <li>Three-step wizard interface</li>
+                        <li>Real-time Google Sheets sync</li>
+                        <li>OAuth2 secure authentication</li>
+                        <li>Responsive design</li>
+                        <li>Error handling & validation</li>
+                    </ul>
+                </div>
+
+                <div class="feature">
+                    <h4>💰 Calculations</h4>
+                    <ul>
+                        <li>Daily, Weekly, Monthly, Annual pay</li>
+                        <li>Social Security (6.2%)</li>
+                        <li>Medicare (1.45%)</li>
+                        <li>WA PFML (0.5794%)</li>
+                        <li>WA Cares (0.58%)</li>
+                        <li>Workers Comp (0.7963%)</li>
+                    </ul>
+                </div>
+
+                <div class="feature">
+                    <h4>⚡ Real-time Sync</h4>
+                    <ul>
+                        <li>Web → Google Sheets</li>
+                        <li>Google Sheets → Web</li>
+                        <li>Updates within 5 seconds</li>
+                        <li>Multiple users support</li>
+                        <li>Socket.IO WebSockets</li>
+                    </ul>
+                </div>
+
+                <div class="feature">
+                    <h4>🔧 Technical Stack</h4>
+                    <ul>
+                        <li>Node.js + Express</li>
+                        <li>Google Sheets API v4</li>
+                        <li>Socket.IO</li>
+                        <li>Modern JavaScript (ES6+)</li>
+                        <li>Responsive CSS</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h4>📊 Sample Calculations (Google Sheets Formulas)</h4>
+                <div class="calculation-demo">
+                    <strong>Example Employee:</strong> John Doe, $25/hour, 8 hours/day, 5 days/week, 52 weeks/year<br><br>
+                    
+                    <strong>Wage Calculations:</strong><br>
+                    Daily Pay = $25 × 8 = $200<br>
+                    Weekly Pay = $200 × 5 = $1,000<br>
+                    Monthly Wage = $1,000 × 52 ÷ 12 = $4,333.33<br>
+                    Annual Pay = $1,000 × 52 = $52,000<br><br>
+                    
+                    <strong>Deductions:</strong><br>
+                    Social Security (6.2%) = $52,000 × 0.062 = $3,224<br>
+                    Medicare (1.45%) = $52,000 × 0.0145 = $754<br>
+                    WA PFML (0.5794%) = $52,000 × 0.005794 = $301.29<br>
+                    WA Cares (0.58%) = $52,000 × 0.0058 = $301.60<br>
+                    Workers Comp (0.7963%) = $52,000 × 0.007963 = $414.08<br><br>
+                    
+                    <strong>Net Pay = $52,000 - Total Deductions</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC Company - Payroll Calculator</title>
+    <link rel="stylesheet" href="styles-professional.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ABC Company</h1>
+            <p>Payroll Calculator System</p>
+        </header>
+
+        <!-- Progress Indicator -->
+        <div class="progress-bar">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Employee Information</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">Wage Calculator</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-title">Cost Breakdown</div>
+            </div>
+        </div>
+
+        <!-- Step 1: Employee Information Input -->
+        <div class="step-content active" id="step1">
+            <h2>Step 1: Employee Information Input</h2>
+            <form id="employeeForm">
+                <div class="form-group">
+                    <label for="employeeName">Employee Name:</label>
+                    <input type="text" id="employeeName" name="employeeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeeId">Employee ID:</label>
+                    <input type="text" id="employeeId" name="employeeId" required>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department:</label>
+                    <input type="text" id="department" name="department" required>
+                </div>
+                <div class="form-group">
+                    <label for="hourlyRate">Hourly Rate ($):</label>
+                    <input type="number" id="hourlyRate" name="hourlyRate" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="hoursPerDay">Hours per Day:</label>
+                    <input type="number" id="hoursPerDay" name="hoursPerDay" step="0.5" min="0" max="24" required>
+                </div>
+                <div class="form-group">
+                    <label for="daysPerWeek">Days per Week:</label>
+                    <input type="number" id="daysPerWeek" name="daysPerWeek" step="1" min="1" max="7" required>
+                </div>
+                <div class="form-group">
+                    <label for="weeksPerYear">Weeks per Year:</label>
+                    <input type="number" id="weeksPerYear" name="weeksPerYear" step="1" min="1" max="52" value="52" required>
+                </div>
+                <div class="form-group">
+                    <label for="federalTaxRate">Federal Income Tax Rate (%):</label>
+                    <input type="number" id="federalTaxRate" name="federalTaxRate" step="0.01" min="0" max="50" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Continue to Wage Calculator</button>
+            </form>
+        </div>
+
+        <!-- Step 2: Employee Wage Calculator -->
+        <div class="step-content" id="step2">
+            <h2>Step 2: Employee Wage Calculator</h2>
+            <div class="wage-display">
+                <div class="wage-item">
+                    <label>Daily Pay:</label>
+                    <span id="dailyPay">$0.00</span>
+                </div>
+                <div class="wage-item">
+                    <label>Weekly Pay:</label>
+                    <span id="weeklyPay">$0.00</span>
+                </div>
+                <div class="wage-item">
+                    <label>Monthly Wage:</label>
+                    <span id="monthlyWage">$0.00</span>
+                </div>
+                <div class="wage-item">
+                    <label>Annual Pay:</label>
+                    <span id="annualPay">$0.00</span>
+                </div>
+            </div>
+            <div class="navigation-buttons">
+                <button class="btn btn-secondary" onclick="goToStep(1)">Back to Employee Info</button>
+                <button class="btn btn-primary" onclick="goToStep(3)">Continue to Cost Breakdown</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Employee Cost Breakdown -->
+        <div class="step-content" id="step3">
+            <h2>Step 3: Employee Cost Breakdown</h2>
+            <div class="employee-summary">
+                <h3 id="employeeSummary">Employee: </h3>
+            </div>
+            <div class="breakdown-display">
+                <div class="gross-pay">
+                    <h4>Gross Annual Pay: <span id="grossAnnualPay">$0.00</span></h4>
+                </div>
+                <div class="deductions">
+                    <h4>Deductions:</h4>
+                    <div class="deduction-item">
+                        <label>Social Security (6.2%):</label>
+                        <span id="socialSecurity">$0.00</span>
+                    </div>
+                    <div class="deduction-item">
+                        <label>Medicare (1.45%):</label>
+                        <span id="medicare">$0.00</span>
+                    </div>
+                    <div class="deduction-item">
+                        <label>WA PFML (0.5794%):</label>
+                        <span id="waPfml">$0.00</span>
+                    </div>
+                    <div class="deduction-item">
+                        <label>WA Cares (0.58%):</label>
+                        <span id="waCares">$0.00</span>
+                    </div>
+                    <div class="deduction-item">
+                        <label>Federal Income Tax:</label>
+                        <span id="federalTax">$0.00</span>
+                    </div>
+                    <div class="deduction-item">
+                        <label>L.N.I Workers Comp (0.7963%):</label>
+                        <span id="workersComp">$0.00</span>
+                    </div>
+                    <div class="total-deductions">
+                        <label><strong>Total Deductions:</strong></label>
+                        <span id="totalDeductions"><strong>$0.00</strong></span>
+                    </div>
+                </div>
+                <div class="net-pay">
+                    <h4>Net Pay: <span id="netPay">$0.00</span></h4>
+                    <h4>Net Take-Home Pay: <span id="netTakeHomePay">$0.00</span></h4>
+                </div>
+            </div>
+            <div class="navigation-buttons">
+                <button class="btn btn-secondary" onclick="goToStep(2)">Back to Wage Calculator</button>
+                <button class="btn btn-primary" onclick="goToStep(1)">Start New Calculation</button>
+            </div>
+        </div>
+
+        <!-- Loading and Error Messages -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Syncing with Google Sheets...</p>
+        </div>
+
+        <div id="errorMessage" class="error-message hidden">
+            <p></p>
+            <button onclick="hideError()">Close</button>
+        </div>
+
+        <!-- Real-time Status -->
+        <div class="status-bar">
+            <div class="sync-status" id="syncStatus">
+                <span class="status-indicator"></span>
+                <span class="status-text">Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
